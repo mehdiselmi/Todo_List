@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import { MdDelete } from "react-icons/md";
 import { FcTodoList } from "react-icons/fc";
@@ -6,11 +6,19 @@ import { FaPen } from "react-icons/fa";
 import { MdOutlineLightMode, MdDarkMode } from "react-icons/md";
 
 const Todo = () => {
+ 
   const [task, setTask] = useState("");
-  const [todoList, setTodoList] = useState([]);
+  const [todoList, setTodoList] = useState(() => {
+  const savedTasks = localStorage.getItem("myTodoList");
+  return savedTasks ? JSON.parse(savedTasks) : [];
+});
   const [dark, setDark] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
-
+ useEffect(() => {
+  if (todoList.length > 0) {
+    localStorage.setItem("myTodoList", JSON.stringify(todoList));
+  }
+}, [todoList]);
   // ======== function add task ============
   const addTask = () => {
     if (task.trim() === "") return;
